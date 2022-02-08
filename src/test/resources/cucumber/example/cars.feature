@@ -1,7 +1,7 @@
 Feature: CarTest
 
   @test
-    Scenario: First
+  Scenario Outline: First
     When I go to the site 'https://www.cars.com/'
     Then Main Page is open
 
@@ -9,15 +9,17 @@ Feature: CarTest
     Then Research page is open
 
     When I search for a car according to such criteria:
-      | Make  |  | Acura |
-      | Model |  | CL    |
-      | Year  |  | 2003  |
-    Then '2003 Acura CL' will be found
+      | Make  | <Make>  |
+      | Model | <Model> |
+      | Year  | <Year>  |
+    Then '<Year> <Make> <Model>' will be found
 
-    When I go to the '2003 Acura CL' trim comparison page
+    When I go to the trim comparison page
+    Then '<Year> <Make> <Model>' trim comparison page is open
 
-    Then '2003 Acura CL' trim comparison page is open
+    When I want note down specifications the car
+    Then I make a note
 
-    When I go to the site 'https://www.cars.com/'
-    Then Main Page is open
-
+    Examples:
+      | Make  | Model | Year |
+      | Acura | CL    | 2003 |

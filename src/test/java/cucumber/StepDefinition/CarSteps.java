@@ -1,7 +1,7 @@
 package cucumber.StepDefinition;
 
-import cucumber.api.Transpose;
 import cucumber.Page.CarPage;
+import cucumber.Page.ComparePage;
 import cucumber.Page.MainPage;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -14,7 +14,8 @@ import java.util.Map;
 public class CarSteps {
     private MainPage mainPage = new MainPage();
     private ResearchPage researchPage = new ResearchPage();
-    private CarPage carPage;
+    private CarPage carPage = new CarPage();
+    private ComparePage comparePage = new ComparePage();
 
 
     @When("^I go to the site '(.*)'$")
@@ -38,28 +39,43 @@ public class CarSteps {
     }
 
     @When("^I search for a car according to such criteria:$")
-    public void i_search_for_a_car_according_to_such_criteria( @Transpose Map<String,String> criteria) {
+    public void i_search_for_a_car_according_to_such_criteria(Map<String, String> criteria) {
+        //Map<String,String> criteria = table.asMap(String.class,String.class);io.cucumber.datatable.DataTable table
+        researchPage.selectMakeOption(criteria.get("Make"));
         researchPage.selectModelOption(criteria.get("Model"));
-        researchPage.selectMakeOption("Make");
-        researchPage.selectYearOption("Year");
+        researchPage.selectYearOption(criteria.get("Year"));
+        researchPage.research();
     }
 
     @Then("'(.*)' will be found")
     public void this_car_will_be_found(String carName) {
-       carPage = new CarPage(carName);
-       Assert.assertTrue("Car page is not open",carPage.state().waitForDisplayed());
-       Assert.assertTrue("Wrong car page", carPage.IsLabelRight());
+        String[] words = carName.split(" ");
+        carPage.setCarName(words[0],words[1],words[2]);
+        Assert.assertTrue("Car page is not open", carPage.state().waitForDisplayed());
+        Assert.assertTrue("Wrong car page", carPage.IsLabelRight());
     }
 
 
-    @When("I go to the {string} trim comparison page")
-    public void i_go_to_the_trim_comparison_page(String string) {
-
+    @When("I go to the trim comparison page")
+    public void i_go_to_the_trim_comparison_page() {
+        carPage.goOnTrim();
     }
 
-    @Then("{string} trim comparison page is open")
+    @Then("'(.*) trim comparison page is open")
     public void trim_comparison_page_is_open(String string) {
+        Assert.assertTrue("Compare Page is not open", comparePage.state().waitForDisplayed());
+    }
+
+    @When("I want note down specifications the car")
+    public void i_want_note_down_specifications_the_car() {
         // Write code here that turns the phrase above into concrete actions
         throw new cucumber.api.PendingException();
     }
+
+    @Then("I make a note")
+    public void i_make_a_note() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new cucumber.api.PendingException();
+    }
+
 }

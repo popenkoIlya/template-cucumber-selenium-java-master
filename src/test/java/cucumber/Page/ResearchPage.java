@@ -11,18 +11,19 @@ public class ResearchPage extends Form {
     private IComboBox makeComboBox = AqualityServices.getElementFactory().getComboBox(By.xpath("//select[@name = 'make']"), "MakeComboBox");
     private IComboBox modelComboBox = AqualityServices.getElementFactory().getComboBox(By.xpath("//select[@name = 'model']"), "ModelComboBox");
     private IComboBox yearComboBox = AqualityServices.getElementFactory().getComboBox(By.xpath("//select[@name = 'year']"), "YearComboBox");
-    private IButton researchButton = AqualityServices.getElementFactory().getButton(By.xpath("//button[@data-linkname = 'research-make']"), "researchButton");
+    private IButton researchButton = AqualityServices.getElementFactory().getButton(By.xpath("//button[contains(@class,'search-button')]"), "researchButton");
 
     public ResearchPage() {
         super(By.xpath(BaseLocator.researchPageTemplate), "ResearchPage");
     }
 
     public void selectMakeOption(String option) {
+        makeComboBox.focus();
         makeComboBox.clickAndSelectByText(option);
     }
 
     public void selectModelOption(String option) {
-       modelComboBox.clickAndSelectByText(option);
+        modelComboBox.clickAndSelectByText(option);
     }
 
     public void selectYearOption(String option) {
@@ -30,6 +31,7 @@ public class ResearchPage extends Form {
     }
 
     public void research() {
+        researchButton.focus();
         researchButton.clickAndWait();
     }
 }

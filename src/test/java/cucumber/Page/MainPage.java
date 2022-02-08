@@ -13,6 +13,7 @@ public class MainPage extends Form {
     }
 
     public void  goToResearchPage(){
+        researchLink.focus();
         researchLink.clickAndWait();
     }
 }
