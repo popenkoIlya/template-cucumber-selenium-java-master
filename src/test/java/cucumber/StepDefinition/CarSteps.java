@@ -1,11 +1,8 @@
 package cucumber.StepDefinition;
 
-import cucumber.Page.CarPage;
-import cucumber.Page.ComparePage;
-import cucumber.Page.MainPage;
+import cucumber.Page.*;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import cucumber.Page.ResearchPage;
 import cucumber.model.Specification;
 import cucumber.utils.BrowserUtils;
 import cucumber.utils.Storage;
@@ -18,6 +15,7 @@ public class CarSteps {
     private MainPage mainPage = new MainPage();
     private ResearchPage researchPage = new ResearchPage();
     private CarPage carPage = new CarPage();
+    private TrimPage trimPage = new TrimPage();
     private ComparePage comparePage = new ComparePage();
 
 
@@ -66,21 +64,54 @@ public class CarSteps {
 
     @Then("'(.*)' trim comparison page is open")
     public void trim_comparison_page_is_open(String string) {
-        Assert.assertTrue("Compare Page is not open", comparePage.state().waitForDisplayed());
+        Assert.assertTrue("Trim Page is not open", trimPage.state().waitForDisplayed());
     }
 
     @When("I want note down specifications the car")
     public void i_want_note_down_specifications_the_car() {
     }
 
-    @Then("I make a note about '(.*)' type")
-    public void i_make_a_note(String name) {
-        comparePage.setCarType(name);
-        comparePage.openStyleSpecification();
-        String transmission = comparePage.getTransmissionText();
-        String engine = comparePage.getEngineText();
+    @Then("I make a note about '(.*)' type and '(.*)' style")
+    public void i_make_a_note(String type, String style) {
+        trimPage.setCarType(type, style);
+        trimPage.clickStyleSpecification();
+        String transmission = trimPage.getTransmissionText();
+        String engine = trimPage.getEngineText();
         specification = new Specification(transmission, engine);
-        Storage.addSpecification(name, specification);
+        Storage.addSpecification(type, specification);
     }
 
+    @When("I go to the Compare Page")
+    public void i_go_to_the_Compare_Page() {
+        researchPage.goToComparePage();
+    }
+
+    @Then("Compare Page is open")
+    public void compare_page_is_open() {
+        Assert.assertTrue("Compare Page is not open", comparePage.state().waitForDisplayed());
+    }
+
+    @When("I add the first model:")
+    public void i_add_the_first_model(Map<String, String> criteria) {
+        comparePage.clickAddCar1();
+        comparePage.selectCar(criteria);
+        comparePage.clickOnSubmit();
+    }
+
+    @Then("First model appears:")
+    public void first_model_appears(Map<String, String> criteria) {
+        Assert.assertTrue("the first model does not appear",comparePage.checkFirstCar(criteria));
+    }
+
+    @When("I add the second model:")
+    public void i_add_the_second_model(Map<String, String> criteria) {
+        comparePage.clickAddCar2();
+        comparePage.selectCar(criteria);
+        comparePage.clickOnSubmit();
+    }
+
+    @Then("Second model appears:")
+    public void second_model_appears(Map<String, String> criteria) {
+        Assert.assertTrue("the ыусщтв model does not appear",comparePage.checkSecondCar(criteria));
+    }
 }

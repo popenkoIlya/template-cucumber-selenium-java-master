@@ -1,36 +1,81 @@
 package cucumber.Page;
 
 import aquality.selenium.browser.AqualityServices;
-import aquality.selenium.elements.interfaces.IButton;
-import aquality.selenium.elements.interfaces.ITextBox;
+import aquality.selenium.elements.ElementType;
+import aquality.selenium.elements.interfaces.*;
 import aquality.selenium.forms.Form;
 import org.openqa.selenium.By;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 public class ComparePage extends Form {
-    private ITextBox engineTextBox;
-    private ITextBox transmissionTextBox;
-    private IButton styleButton;
-
-    public ComparePage() {
-        super(By.xpath(BaseLocator.comparePageTemplate), "ComparePage");
+    private ILink car1Link = AqualityServices.getElementFactory().getLink(By.xpath("//a[@phx-value-vehicle_index='vehicle_1']"),"Vehicle1Link");
+    private ILink car2Link = AqualityServices.getElementFactory().getLink(By.xpath("//a[@phx-value-vehicle_index='vehicle_2']"),"Vehicle2Link");
+    private IComboBox makeComboBox = AqualityServices.getElementFactory().getComboBox(By.xpath("//select[@name='vehicle_selection[make]']"), "MakeComboBox");
+    private IComboBox modelComboBox = AqualityServices.getElementFactory().getComboBox(By.xpath("//select[@name='vehicle_selection[model]']"), "ModelComboBox");
+    private IComboBox yearComboBox = AqualityServices.getElementFactory().getComboBox(By.xpath("//select[@name='vehicle_selection[year]']"), "YearComboBox");
+    private IComboBox trimComboBox = AqualityServices.getElementFactory().getComboBox(By.xpath("//select[@name='vehicle_selection[trim]']"), "TrimComboBox");
+    private IButton submitButton = AqualityServices.getElementFactory().getButton(By.xpath("//button[@type='submit']"),"SubmitButton");
+    private IButton compareButton = AqualityServices.getElementFactory().getButton(By.xpath("//button[@phx-click='details']"),"CompareButton");
+    private List<ITextBox> textBoxCard1List; //div[contains(@class,'card2')]//div[@class='details']//child::p;
+    private ITextBox card1DetailsElement = AqualityServices.getElementFactory().getTextBox(By.xpath("//div[contains(@class,'card1')]//div[@class='details']"),"Card1");
+    private ITextBox card2DetailsElement = AqualityServices.getElementFactory().getTextBox(By.xpath("//div[contains(@class,'card2')]//div[@class='details']"),"Card2");
+    public ComparePage(){
+        super(By.xpath(BaseLocator.comparePageTemplate),  "ComparePage");
     }
 
-    public void setCarType(String carType) {
-        engineTextBox = AqualityServices.getElementFactory().getTextBox(By.xpath(String.format("//span[text()='%s']//ancestor::h2//following-sibling::div//th[text()='Engine']//ancestor::tr//following-sibling::tr[1]/td[1]", carType)), "EngineText");
-        transmissionTextBox = AqualityServices.getElementFactory().getTextBox(By.xpath(String.format("//span[text()='%s']//ancestor::h2//following-sibling::div//th[text()='Transmission']//ancestor::tr//following-sibling::tr[1]/td[1]", carType)), "TransmissionText");
-        styleButton = AqualityServices.getElementFactory().getButton(By.xpath(String.format("//span[text()='%s']//ancestor::button",carType)),"StyleButton");
+    public void selectCar(Map<String, String> criteria){
+        selectMakeOption(criteria.get("Make"));
+        selectModelOption(criteria.get("Model"));
+        selectYearOption(criteria.get("Year"));
+        selectTrimOption(criteria.get("Style"));
     }
 
-
-    public void openStyleSpecification(){
-        styleButton.focus();
-        styleButton.clickAndWait();
-    }
-    public String getEngineText(){
-        return engineTextBox.getText();
+    public boolean checkFirstCar(Map<String, String> criteria){
+        card1DetailsElement.state().waitForDisplayed();
+        String name =  criteria.get("Year")+" "+criteria.get("Make")+" "+criteria.get("Model");
+        textBoxCard1List = AqualityServices.getElementFactory().findElements(By.xpath("//div[contains(@class,'card1')]//div[@class='details']//child::p"),"TextBoxCard1List", ElementType.TEXTBOX);
+        return Objects.equals(textBoxCard1List.get(0).getText(), name) && Objects.equals(textBoxCard1List.get(1).getText(), criteria.get("Style"));
     }
 
-    public String getTransmissionText(){
-        return transmissionTextBox.getText();
+    public boolean checkSecondCar(Map<String, String> criteria){
+        card2DetailsElement.state().waitForDisplayed();
+        String name =  criteria.get("Year")+" "+criteria.get("Make")+" "+criteria.get("Model");
+        textBoxCard1List = AqualityServices.getElementFactory().findElements(By.xpath("//div[contains(@class,'card2')]//div[@class='details']//child::p"),"TextBoxCard1List", ElementType.TEXTBOX);
+        return Objects.equals(textBoxCard1List.get(0).getText(), name) && Objects.equals(textBoxCard1List.get(1).getText(), criteria.get("Style"));
+
+    }
+    public void clickAddCar1(){
+        car1Link.focus();
+        car1Link.clickAndWait();
+    }
+    public void clickAddCar2() {
+        car2Link.focus();
+        car2Link.clickAndWait();
+    }
+        public void clickOnSubmit(){
+        submitButton.clickAndWait();
+    }
+
+    public void selectMakeOption(String option) {
+        makeComboBox.focus();
+        makeComboBox.clickAndSelectByText(option);
+    }
+
+    public void selectModelOption(String option) {
+        modelComboBox.clickAndSelectByText(option);
+    }
+
+    public void selectYearOption(String option) {
+        yearComboBox.clickAndSelectByText(option);
+    }
+
+    public void selectTrimOption(String option) {
+        trimComboBox.clickAndSelectByText(option);
+    }
+    public void clickOnCompare(){
+        compareButton.clickAndWait();
     }
 }
