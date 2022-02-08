@@ -1,4 +1,4 @@
-package Forms;
+package cucumber.Page;
 
 public class BaseLocator {
     public static String carPageTemplate = "//div[@class = 'research-mmy-page']";
