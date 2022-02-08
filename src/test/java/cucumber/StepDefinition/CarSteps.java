@@ -6,12 +6,15 @@ import cucumber.Page.MainPage;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.Page.ResearchPage;
+import cucumber.model.Specification;
 import cucumber.utils.BrowserUtils;
+import cucumber.utils.Storage;
 import org.junit.Assert;
 
 import java.util.Map;
 
 public class CarSteps {
+    private Specification specification;
     private MainPage mainPage = new MainPage();
     private ResearchPage researchPage = new ResearchPage();
     private CarPage carPage = new CarPage();
@@ -50,7 +53,7 @@ public class CarSteps {
     @Then("'(.*)' will be found")
     public void this_car_will_be_found(String carName) {
         String[] words = carName.split(" ");
-        carPage.setCarName(words[0],words[1],words[2]);
+        carPage.setCarName(words[0], words[1], words[2]);
         Assert.assertTrue("Car page is not open", carPage.state().waitForDisplayed());
         Assert.assertTrue("Wrong car page", carPage.IsLabelRight());
     }
@@ -61,21 +64,23 @@ public class CarSteps {
         carPage.goOnTrim();
     }
 
-    @Then("'(.*) trim comparison page is open")
+    @Then("'(.*)' trim comparison page is open")
     public void trim_comparison_page_is_open(String string) {
         Assert.assertTrue("Compare Page is not open", comparePage.state().waitForDisplayed());
     }
 
     @When("I want note down specifications the car")
     public void i_want_note_down_specifications_the_car() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new cucumber.api.PendingException();
     }
 
-    @Then("I make a note")
-    public void i_make_a_note() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new cucumber.api.PendingException();
+    @Then("I make a note about '(.*)' type")
+    public void i_make_a_note(String name) {
+        comparePage.setCarType(name);
+        comparePage.openStyleSpecification();
+        String transmission = comparePage.getTransmissionText();
+        String engine = comparePage.getEngineText();
+        specification = new Specification(transmission, engine);
+        Storage.addSpecification(name, specification);
     }
 
 }

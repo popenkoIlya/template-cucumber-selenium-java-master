@@ -18,8 +18,10 @@ Feature: CarTest
     Then '<Year> <Make> <Model>' trim comparison page is open
 
     When I want note down specifications the car
-    Then I make a note
+    Then I make a note about '<Type>' type
 
     Examples:
-      | Make  | Model | Year |
-      | Acura | CL    | 2003 |
+      | Make      | Model     | Year | Type              |
+      | Acura     | CL        | 2003 | Type S (2 styles) |
+      | Chevrolet | Avalanche | 2013 | LS (2 styles)     |
+
