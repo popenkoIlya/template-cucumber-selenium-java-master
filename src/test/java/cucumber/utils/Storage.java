@@ -10,7 +10,7 @@ public class Storage {
     public static void addSpecification(String key, Specification specification){
         specificationMap.put(key,specification);
     }
-    public static void getSpecification(String key){
-        specificationMap.get(key);
+    public static Specification getSpecification(String key){
+       return specificationMap.get(key);
     }
 }

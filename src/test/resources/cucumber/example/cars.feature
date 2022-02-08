@@ -17,8 +17,8 @@ Feature: CarTest
     When I go to the trim comparison page
     Then '<Year> <Make> <Model>' trim comparison page is open
 
-    When I want note down specifications the car
-    Then I make a note about '<Type>' type and '<Style>' style
+    When I want note down specifications of the car
+    Then I make a note about engine and transmission of '<Year> <Make> <Model>' '<Type>' type and '<Style>' style
 
     Examples:
       | Make      | Model     | Year | Type              | Style                       |
@@ -64,3 +64,7 @@ Feature: CarTest
       | Year  | 2013            |
       | Type  | LS (2 styles)   |
       | Style | 2WD Crew Cab LS |
+
+    When I compare two models
+    Then I get right information about engines and transmissions these models:
+      |2003 Acura CL 2dr Cpe 3.2L Type S 6-Speed|2013 Chevrolet Avalanche 2WD Crew Cab LS|

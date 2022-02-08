@@ -8,6 +8,7 @@ import cucumber.utils.BrowserUtils;
 import cucumber.utils.Storage;
 import org.junit.Assert;
 
+import java.util.List;
 import java.util.Map;
 
 public class CarSteps {
@@ -67,18 +68,18 @@ public class CarSteps {
         Assert.assertTrue("Trim Page is not open", trimPage.state().waitForDisplayed());
     }
 
-    @When("I want note down specifications the car")
+    @When("I want note down specifications of the car")
     public void i_want_note_down_specifications_the_car() {
     }
 
-    @Then("I make a note about '(.*)' type and '(.*)' style")
-    public void i_make_a_note(String type, String style) {
+    @Then("I make a note about engine and transmission of '(.*)' '(.*)' type and '(.*)' style")
+    public void i_make_a_note(String name, String type, String style) {
         trimPage.setCarType(type, style);
         trimPage.clickStyleSpecification();
         String transmission = trimPage.getTransmissionText();
         String engine = trimPage.getEngineText();
         specification = new Specification(transmission, engine);
-        Storage.addSpecification(type, specification);
+        Storage.addSpecification(name + " " + style, specification);
     }
 
     @When("I go to the Compare Page")
@@ -112,6 +113,17 @@ public class CarSteps {
 
     @Then("Second model appears:")
     public void second_model_appears(Map<String, String> criteria) {
-        Assert.assertTrue("the ыусщтв model does not appear",comparePage.checkSecondCar(criteria));
+        Assert.assertTrue("the second model does not appear",comparePage.checkSecondCar(criteria));
+    }
+
+    @When("I compare two models")
+    public void i_compare_two_models() {
+        comparePage.clickOnCompare();
+    }
+
+    @Then("I get right information about engines and transmissions these models:")
+    public void i_get_right_information(List<String> carList) {
+        Assert.assertTrue("information about transmissions is wrong",comparePage.checkCompareTransmission(carList.get(0),carList.get(1)));
+        Assert.assertTrue("information about engines is wrong",comparePage.checkCompareEngine(carList.get(0),carList.get(1)));
     }
 }

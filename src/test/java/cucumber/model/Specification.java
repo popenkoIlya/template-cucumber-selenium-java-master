@@ -10,4 +10,12 @@ public class Specification {
         this.transmission = transmission;
         this.engine = engine;
     }
+
+    public String getTransmission() {
+        return transmission;
+    }
+
+    public String getEngine() {
+        return engine;
+    }
 }
