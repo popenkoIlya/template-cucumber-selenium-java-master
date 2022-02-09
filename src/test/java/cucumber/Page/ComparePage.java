@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static cucumber.utils.StringUtils.compareMeaningStrings;
+import static cucumber.utils.StringUtils.getPreparedStringValue;
+
 public class ComparePage extends Form {
     private ILink car1Link = AqualityServices.getElementFactory().getLink(By.xpath("//a[@phx-value-vehicle_index='vehicle_1']"), "Vehicle1Link");
     private ILink car2Link = AqualityServices.getElementFactory().getLink(By.xpath("//a[@phx-value-vehicle_index='vehicle_2']"), "Vehicle2Link");
@@ -92,12 +95,12 @@ public class ComparePage extends Form {
     public boolean checkCompareEngine(String firstName, String secondName) {
         overviewLabel.state().waitForDisplayed();
         compareEngineList = AqualityServices.getElementFactory().findElements(By.xpath("//tr[contains(@class,'engine-section')]//following-sibling::tr[1]//child::p"), ElementType.TEXTBOX);
-        return Objects.equals(compareEngineList.get(0).getText(), Storage.getSpecification(firstName).getEngine()) && Objects.equals(compareEngineList.get(1).getText(), Storage.getSpecification(secondName).getEngine());
+        return compareMeaningStrings(compareEngineList.get(0).getText(), Storage.getSpecification(firstName).getEngine()) && compareMeaningStrings(compareEngineList.get(1).getText(), Storage.getSpecification(secondName).getEngine());
     }
 
     public boolean checkCompareTransmission(String firstName, String secondName) {
         overviewLabel.state().waitForDisplayed();
         compareTransmissionList = AqualityServices.getElementFactory().findElements(By.xpath("//td[text()='Transmissions']//ancestor::tr//following::tr[1]//child::p"), ElementType.TEXTBOX);
-        return Objects.equals(compareTransmissionList.get(0).getText(), Storage.getSpecification(firstName).getTransmission()) && Objects.equals(compareTransmissionList.get(2).getText(), Storage.getSpecification(secondName).getTransmission());
+        return compareMeaningStrings(compareTransmissionList.get(0).getText(), Storage.getSpecification(firstName).getTransmission()) && compareMeaningStrings(compareTransmissionList.get(2).getText(), Storage.getSpecification(secondName).getTransmission());
     }
 }
